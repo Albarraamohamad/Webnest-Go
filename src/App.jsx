@@ -12,15 +12,18 @@ import Testimonials2 from "./componenets/Testimonials2";
 import FAQ from "./componenets/Faq";
 import Footer from "./componenets/Footer";
 
-const App = () => {
+function App() {
   useEffect(() => {
-    // Initialize Lenis smooth scroll
+    // ✅ Initialize Lenis smooth scroll (clean, global version)
     const lenis = new Lenis({
-      duration: 7, // smoothness speed
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easing function
-      smoothWheel: 4,
-      smoothTouch: 4,
+      duration: 2, // Adjust scroll speed (higher = slower)
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      smoothTouch: true,
     });
+
+    // Expose globally if needed elsewhere
+    window.lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -29,7 +32,14 @@ const App = () => {
 
     requestAnimationFrame(raf);
 
+    // Handle resizing or layout shifts
+    const onResize = () => lenis.refresh();
+    window.addEventListener("resize", onResize);
+    window.addEventListener("load", () => lenis.refresh());
+
     return () => {
+      window.removeEventListener("resize", onResize);
+      delete window.lenis;
       lenis.destroy();
     };
   }, []);
@@ -37,45 +47,44 @@ const App = () => {
   return (
     <BrowserRouter>
       <div id="app-wrapper" className="bg-black text-white">
-        {/* Hero Section */}
-        <Home />
+        <section id="home">
+          <Home />
+        </section>
 
-        {/* Description */}
-        <div id="description">
+        <section id="description">
           <Section2 />
-        </div>
+        </section>
 
-        {/* Experience */}
-        <div id="experience">
+        <section id="experience">
           <Section3 />
-        </div>
+        </section>
 
-        {/* Services */}
-        <div id="services">
+        <section id="services">
           <Services />
-        </div>
-        <div id="services2">
+        </section>
+
+        <section id="services2">
           <Services2 />
-        </div>
+        </section>
 
-        {/* Testimonials */}
-        <div id="testimonials">
+        <section id="testimonials">
           <Testimonials />
-        </div>
-        <div id="testimonials2">
+        </section>
+
+        <section id="testimonials2">
           <Testimonials2 />
-        </div>
+        </section>
 
-        {/* FAQ */}
-        <div id="faq">
+        <section id="faq">
           <FAQ />
-        </div>
+        </section>
 
-        {/* Footer */}
-        <Footer />
+        <footer id="footer">
+          <Footer />
+        </footer>
       </div>
     </BrowserRouter>
   );
-};
+}
 
 export default App;
