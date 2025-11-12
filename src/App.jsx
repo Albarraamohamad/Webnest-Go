@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import Lenis from "@studio-freight/lenis";
 
 import Home from "./pages/Home";
 import Section2 from "./componenets/Section2";
@@ -13,37 +12,6 @@ import FAQ from "./componenets/Faq";
 import Footer from "./componenets/Footer";
 
 function App() {
-  useEffect(() => {
-    // ✅ Initialize Lenis smooth scroll (clean, global version)
-    const lenis = new Lenis({
-      duration: 2, // Adjust scroll speed (higher = slower)
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      smoothTouch: true,
-    });
-
-    // Expose globally if needed elsewhere
-    window.lenis = lenis;
-
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    // Handle resizing or layout shifts
-    const onResize = () => lenis.refresh();
-    window.addEventListener("resize", onResize);
-    window.addEventListener("load", () => lenis.refresh());
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      delete window.lenis;
-      lenis.destroy();
-    };
-  }, []);
-
   return (
     <BrowserRouter>
       <div id="app-wrapper" className="bg-black text-white">
